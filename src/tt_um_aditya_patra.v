@@ -1,4 +1,4 @@
-module tt_um_aditya-patra(
+module tt_um_aditya_patra(
     input wire sensor1,
     input wire sensor2,
     input wire sensor3,
