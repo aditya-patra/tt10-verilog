@@ -1,12 +1,7 @@
-module tt_um_aditya_patra(
-    input wire sensor1,
-    input wire sensor2,
-    input wire sensor3,
+module state_machine(
+    input wire [7:0] ui_in,    // Inputs mapped to the pinout
+    output wire [7:0] uo_out, // Outputs mapped to the pinout
     input wire clk,
-    input wire reset,
-    output reg buzzer1,
-    output reg buzzer2,
-    output reg buzzer3
 );
 
     // Define module variables
@@ -17,6 +12,14 @@ module tt_um_aditya_patra(
     reg [1:0] next_state;    // 2-bit next state
     reg [4:0] duration;      // 5-bit duration (unused in the logic but included as per requirements)
 
+    
+    reg buzzer1;
+    reg buzzer2;
+    reg buzzer3;
+    wire sensor1 = ui_in[0];
+    wire sensor2 = ui_in[1];
+    wire sensor3 = ui_in[2];
+    wire rst_n = ui_in[3];
     // State definitions
     localparam STATE_0 = 2'b00;
     localparam STATE_1 = 2'b01;
@@ -24,8 +27,8 @@ module tt_um_aditya_patra(
     localparam STATE_3 = 2'b11;
 
     // Sequential logic for state and counter updates
-    always @(posedge clk or posedge reset) begin
-        if (reset) begin
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
             // Reset all registers
             curr_state <= STATE_0;
             next_state <= STATE_0;
@@ -40,14 +43,14 @@ module tt_um_aditya_patra(
             curr_state <= next_state;
 
             // Check if any buzzers are enabled
-            if (reset) begin
+            if (!rst_n) begin
                 state_check <= 1'b0;
                 buzzer1 <= 1'b0;
                 buzzer2 <= 1'b0;
                 buzzer3 <= 1'b0;
                 checker <= 1'b0;
                 counter <= 1'b0;
-            end else if (!reset) begin
+            end else if (rst_n) begin
                 // Increment counter if it's not zero and check for overflow
 
                 if (counter == 5'b0) begin
@@ -126,5 +129,4 @@ module tt_um_aditya_patra(
             end
         end
     end
-
 endmodule
