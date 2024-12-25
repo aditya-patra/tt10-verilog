@@ -6,7 +6,7 @@ module tt_um_aditya_patra(
 
     // Define module variables
     reg [4:0] counter;       // 5-bit counter
-    reg [2:0] checker;       // 3-bit checker
+    reg [2:0] state_checker;       // 3-bit checker
     reg [1:0] state_check;   // 2-bit state_check
     reg [1:0] curr_state;    // 2-bit current state
     reg [1:0] next_state;    // 2-bit next state
@@ -36,7 +36,7 @@ module tt_um_aditya_patra(
             curr_state <= STATE_0;
             next_state <= STATE_0;
             counter <= 5'b0;
-            checker <= 3'b0;
+            state_checker <= 3'b0;
             state_check <= 2'b0;
             buzzer1 <= 1'b0;
             buzzer2 <= 1'b0;
@@ -51,15 +51,15 @@ module tt_um_aditya_patra(
                 buzzer1 <= 1'b0;
                 buzzer2 <= 1'b0;
                 buzzer3 <= 1'b0;
-                checker <= 1'b0;
+                state_checker <= 1'b0;
                 counter <= 1'b0;
             end else if (rst_n) begin
                 // Increment counter if it's not zero and check for overflow
 
                 if (counter == 5'b0) begin
                     // Check checker logic: if checker is 7, reset checker, set counter to 1, and enable the corresponding buzzer
-                    if (checker == 3'd7) begin
-                        checker <= 3'd0;
+                    if (state_checker == 3'd7) begin
+                        state_checker <= 3'd0;
                         case (state_check)
                             2'd0: begin
                                 buzzer1 <= 1'b0;
@@ -96,27 +96,27 @@ module tt_um_aditya_patra(
                         // Check which buzzer is enabled and update state_check
                         if (sensor1) begin
                             if (state_check == 2'd1)
-                                checker <= checker + 1;
+                                state_checker <= state_checker + 1;
                             else begin
                                 state_check <= 2'd1;
-                                checker <= 3'd1;
+                                state_checker <= 3'd1;
                             end
                         end else if (sensor2) begin
                             if (state_check == 2'd2)
-                                checker <= checker + 1;
+                                state_checker <= state_checker + 1;
                             else begin
                                 state_check <= 2'd2;
-                                checker <= 3'd1;
+                                state_checker <= 3'd1;
                             end
                         end else if (sensor3) begin
                             if (state_check == 2'd3)
-                                checker <= checker + 1;
+                                state_checker <= state_checker + 1;
                             else begin
                                 state_check <= 2'd3;
-                                checker <= 3'd1;
+                                state_checker <= 3'd1;
                             end
                         end else begin
-                            checker <= 3'd0;
+                            state_checker <= 3'd0;
                         end
                     end
                 end
