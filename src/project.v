@@ -1,4 +1,4 @@
-module state_machine(
+module tt_um_aditya_patra(
     input wire [7:0] ui_in,    // Inputs mapped to the pinout
     output wire [7:0] uo_out, // Outputs mapped to the pinout
     input wire clk,
