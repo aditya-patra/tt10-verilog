@@ -1,5 +1,4 @@
 `timescale 1ns / 1ps
-`include "state_machine.v"
 
 
 module tb ();
