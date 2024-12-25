@@ -5,6 +5,7 @@ module tb ();
     // Testbench inputs (ui_in is an 8-bit register)
     reg [7:0] ui_in;  // 8 bits for 8 sensors
     reg [7:0] uio_in;
+    reg [7:0] uio_oe;
     reg clk;
     reg ena;
     reg rst_n;
@@ -18,6 +19,7 @@ module tb ();
         .clk(clk),
         .ena(ena),
         .uio_in(uio_in),
+        .uio_oe(uio_oe),
         .uo_out(uo_out),
         .rst_n(rst_n)// 8-bit output
     );
