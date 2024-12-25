@@ -16,6 +16,9 @@ module state_machine(
     reg buzzer1;
     reg buzzer2;
     reg buzzer3;
+    assign uo_out[0] = buzzer1;
+    assign uo_out[1] = buzzer2;
+    assign uo_out[2] = buzzer3;
     wire sensor1 = ui_in[0];
     wire sensor2 = ui_in[1];
     wire sensor3 = ui_in[2];
