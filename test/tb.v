@@ -5,7 +5,7 @@ module tb ();
     // Testbench inputs (ui_in is an 8-bit register)
     reg [7:0] ui_in;  // 8 bits for 8 sensors
     reg clk;
-    reg reset;
+    reg ena;
 
     // Testbench outputs (uo_out is an 8-bit wire)
     wire [7:0] uo_out;  // 8 bits for 8 buzzers
@@ -14,7 +14,7 @@ module tb ();
     tt_um_aditya_patra dut (
         .ui_in(ui_in),    // 8-bit input
         .clk(clk),
-        .reset(reset),
+        .ena(ena),
         .uo_out(uo_out)   // 8-bit output
     );
 
@@ -31,20 +31,16 @@ module tb ();
 
         // Initialize inputs
         ui_in = 8'b00000000;  // All sensors off (low)
-        reset = 0;
+        ena = 1;
 
         // Apply reset
         #5;
-        reset = 1;
+        ui_in[3] = 0;
 
         // Test scenario: activate each sensor and observe outputs
         // Case 1: Reset state
-        #15;
-        reset = 0;  // Assert reset
         #10;
-        reset = 0;  // Deassert reset
-        #10;
-
+        ui_in[3] = 1;
         // Case 2: Enable ui_in[0] (sensor1) and observe uo_out[0] (buzzer1) behavior
         ui_in[0] = 1;
         #100;
