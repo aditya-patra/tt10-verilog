@@ -16,7 +16,7 @@ module tb ();
     wire buzzer3;
 
     // Instantiate the state_machine module
-    state_machine dut (
+    tt_um_aditya_patra dut (
         .sensor1(sensor1),
         .sensor2(sensor2),
         .sensor3(sensor3),
