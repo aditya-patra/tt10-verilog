@@ -1,6 +1,6 @@
 module tt_um_aditya_patra(
-    input wire [7:0] ui_in,    // Inputs mapped to the pinout
-    output wire [7:0] uo_out, // Outputs mapped to the pinout
+    input wire [7:0] ui,    // Inputs mapped to the pinout
+    output wire [7:0] uo, // Outputs mapped to the pinout
     input wire clk,
     input wire ena
 );
@@ -17,13 +17,13 @@ module tt_um_aditya_patra(
     reg buzzer1;
     reg buzzer2;
     reg buzzer3;
-    assign uo_out[0] = buzzer1;
-    assign uo_out[1] = buzzer2;
-    assign uo_out[2] = buzzer3;
-    wire sensor1 = ui_in[0];
-    wire sensor2 = ui_in[1];
-    wire sensor3 = ui_in[2];
-    wire rst_n = ui_in[3];
+    assign uo[0] = buzzer1;
+    assign uo[1] = buzzer2;
+    assign uo[2] = buzzer3;
+    wire sensor1 = ui[0];
+    wire sensor2 = ui[1];
+    wire sensor3 = ui[2];
+    wire rst_n = ui[3];
     // State definitions
     localparam STATE_0 = 2'b00;
     localparam STATE_1 = 2'b01;
