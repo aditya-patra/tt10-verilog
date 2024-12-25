@@ -12,10 +12,10 @@ module tb ();
 
     // Instantiate the state_machine module (use ui_in and uo_out)
     tt_um_aditya_patra dut (
-        .ui_in(ui_in),    // 8-bit input
+        .ui(ui_in),    // 8-bit input
         .clk(clk),
         .ena(ena),
-        .uo_out(uo_out)   // 8-bit output
+        .uo(uo_out)   // 8-bit output
     );
 
     // Clock generation
