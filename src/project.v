@@ -2,7 +2,8 @@ module tt_um_aditya_patra(
     input wire [7:0] ui,    // Inputs mapped to the pinout
     output wire [7:0] uo, // Outputs mapped to the pinout
     input wire clk,
-    input wire ena
+    input wire ena,
+    input wire rst_n
 );
 
     // Define module variables
@@ -26,8 +27,6 @@ module tt_um_aditya_patra(
     assign sensor2 = ui[1];
     wire sensor3;
     assign sensor3 = ui[2];
-    wire rst_n;
-    assign rst_n = ui[3];
     // State definitions
     localparam STATE_0 = 2'b00;
     localparam STATE_1 = 2'b01;
