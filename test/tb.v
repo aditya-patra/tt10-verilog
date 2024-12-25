@@ -1,30 +1,21 @@
 `timescale 1ns / 1ps
 
-
 module tb ();
 
-    // Testbench inputs
-    reg sensor1;
-    reg sensor2;
-    reg sensor3;
+    // Testbench inputs (ui_in is an 8-bit register)
+    reg [7:0] ui_in;  // 8 bits for 8 sensors
     reg clk;
     reg reset;
 
-    // Testbench outputs (from the DUT)
-    wire buzzer1;
-    wire buzzer2;
-    wire buzzer3;
+    // Testbench outputs (uo_out is an 8-bit wire)
+    wire [7:0] uo_out;  // 8 bits for 8 buzzers
 
-    // Instantiate the state_machine module
+    // Instantiate the state_machine module (use ui_in and uo_out)
     tt_um_aditya_patra dut (
-        .sensor1(sensor1),
-        .sensor2(sensor2),
-        .sensor3(sensor3),
+        .ui_in(ui_in),    // 8-bit input
         .clk(clk),
         .reset(reset),
-        .buzzer1(buzzer1),
-        .buzzer2(buzzer2),
-        .buzzer3(buzzer3)
+        .uo_out(uo_out)   // 8-bit output
     );
 
     // Clock generation
@@ -36,11 +27,10 @@ module tb ();
     // Test procedure
     initial begin
         $dumpfile("state_machine_tb.vcd");
-        $dumpvars(0, state_machine_tb);
+        $dumpvars(0, tb);  // Correct the reference to the testbench module
+
         // Initialize inputs
-        sensor1 = 0;
-        sensor2 = 0;
-        sensor3 = 0;
+        ui_in = 8'b00000000;  // All sensors off (low)
         reset = 0;
 
         // Apply reset
@@ -55,27 +45,33 @@ module tb ();
         reset = 0;  // Deassert reset
         #10;
 
-        // Case 2: Enable sensor1 and observe buzzer1 behavior
-        sensor1 = 1;
+        // Case 2: Enable ui_in[0] (sensor1) and observe uo_out[0] (buzzer1) behavior
+        ui_in[0] = 1;
         #100;
-        sensor1 = 0;
+        ui_in[0] = 0;
 
-        // Case 3: Enable sensor2 and observe buzzer2 behavior
-        sensor2 = 1;
+        // Case 3: Enable ui_in[1] (sensor2) and observe uo_out[1] (buzzer2) behavior
+        ui_in[1] = 1;
         #100;
-        sensor2 = 0;
+        ui_in[1] = 0;
 
-        // Case 4: Enable sensorthree and observe buzzer3 behavior
-        sensor3 = 1;
+        // Case 4: Enable ui_in[2] (sensor3) and observe uo_out[2] (buzzer3) behavior
+        ui_in[2] = 1;
         #100;
-        sensor3 = 0;
+        ui_in[2] = 0;
 
-        // Case 5: Combination of sensors
-        sensor3 = 1;
-        sensor2 = 1;
+        // Case 5: Combination of ui_in[2] (sensor3) and ui_in[1] (sensor2)
+        ui_in[2] = 1;
+        ui_in[1] = 1;
         #400;
-        sensor3 = 0;
-        sensor2 = 0;
+        ui_in[2] = 0;
+        ui_in[1] = 0;
+        #100;
+
+        // Case 6: All sensors enabled
+        ui_in = 8'b11111111;  // All sensors on
+        #200;
+        ui_in = 8'b00000000;  // All sensors off
         #100;
 
         // End simulation
