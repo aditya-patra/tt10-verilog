@@ -6,6 +6,7 @@ module tb ();
     reg [7:0] ui_in;  // 8 bits for 8 sensors
     reg clk;
     reg ena;
+    reg rst_n;
 
     // Testbench outputs (uo_out is an 8-bit wire)
     wire [7:0] uo_out;  // 8 bits for 8 buzzers
@@ -15,7 +16,8 @@ module tb ();
         .ui(ui_in),    // 8-bit input
         .clk(clk),
         .ena(ena),
-        .uo(uo_out)   // 8-bit output
+        .uo(uo_out),
+        .rst_n(rst_n)// 8-bit output
     );
 
     // Clock generation
@@ -35,12 +37,12 @@ module tb ();
 
         // Apply reset
         #5;
-        ui_in[3] = 0;
+        rst_n = 0;
 
         // Test scenario: activate each sensor and observe outputs
         // Case 1: Reset state
         #10;
-        ui_in[3] = 1;
+        rst_n = 1;
         // Case 2: Enable ui_in[0] (sensor1) and observe uo_out[0] (buzzer1) behavior
         ui_in[0] = 1;
         #100;
