@@ -1,7 +1,7 @@
 module tt_um_aditya_patra(
     input wire [7:0] ui_in,    // Inputs mapped to the pinout
     output wire [7:0] uo_in, // Outputs mapped to the pinout
-    inout wire [7:0] uio_in,
+    input wire [7:0] uio_in,
     input wire clk,
     input wire ena,
     input wire rst_n
