@@ -15,7 +15,6 @@ module tt_um_aditya_patra(
     reg [1:0] state_check;   // 2-bit state_check
     reg [1:0] curr_state;    // 2-bit current state
     reg [1:0] next_state;    // 2-bit next state
-    reg [4:0] duration;      // 5-bit duration (unused in the logic but included as per requirements)
 
     
     reg buzzer1;
