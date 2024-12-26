@@ -36,7 +36,7 @@ module tt_um_aditya_patra(
     localparam STATE_3 = 2'b11;
 
     // Sequential logic for state and counter updates
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk) begin
         if (ena) begin
             if (!rst_n) begin
                 // Reset all registers
@@ -51,91 +51,80 @@ module tt_um_aditya_patra(
             end else begin
                 // Update current state
                 curr_state <= next_state;
+                // Increment counter if it's not zero and check for overflow
     
-                // Check if any buzzers are enabled
-                if (!rst_n) begin
-                    state_check <= 2'b0;
-                    buzzer1 <= 1'b0;
-                    buzzer2 <= 1'b0;
-                    buzzer3 <= 1'b0;
-                    state_checker <= 3'b0;
-                    counter <= 5'b0;
-                end else if (rst_n) begin
-                    // Increment counter if it's not zero and check for overflow
-    
-                    if (counter == 5'b0) begin
-                        // Check checker logic: if checker is 7, reset checker, set counter to 1, and enable the corresponding buzzer
-                        if (state_checker == 3'd7) begin
-                            state_checker <= 3'd0;
-                            case (state_check)
-                                2'd0: begin
-                                    buzzer1 <= 1'b0;
-                                    buzzer2 <= 1'b0;
-                                    buzzer3 <= 1'b0;
-                                    counter <= 5'b0;
-                                end
-                                2'd1: begin
-                                    buzzer1 <= 1'b1;
-                                    buzzer2 <= 1'b0;
-                                    buzzer3 <= 1'b0;
-                                    counter <= 5'b1;
-                                end
-                                2'd2: begin
-                                    buzzer1 <= 1'b0;
-                                    buzzer2 <= 1'b1;
-                                    buzzer3 <= 1'b0;
-                                    counter <= 5'b1;
-                                end
-                                2'd3: begin
-                                    buzzer1 <= 1'b0;
-                                    buzzer2 <= 1'b0;
-                                    buzzer3 <= 1'b1;
-                                    counter <= 5'b1;
-                                end
-                                default: begin
-                                    buzzer1 <= 1'b0;
-                                    buzzer2 <= 1'b0;
-                                    buzzer3 <= 1'b0;
-                                    counter <= 5'b0;
-                                end
-                            endcase
-                        end else begin
-                            // Check which buzzer is enabled and update state_check
-                            if (sensor1) begin
-                                if (state_check == 2'd1)
-                                    state_checker <= state_checker + 1;
-                                else begin
-                                    state_check <= 2'd1;
-                                    state_checker <= 3'd1;
-                                end
-                            end else if (sensor2) begin
-                                if (state_check == 2'd2)
-                                    state_checker <= state_checker + 1;
-                                else begin
-                                    state_check <= 2'd2;
-                                    state_checker <= 3'd1;
-                                end
-                            end else if (sensor3) begin
-                                if (state_check == 2'd3)
-                                    state_checker <= state_checker + 1;
-                                else begin
-                                    state_check <= 2'd3;
-                                    state_checker <= 3'd1;
-                                end
-                            end else begin
-                                state_checker <= 3'd0;
+                if (counter == 5'b0) begin
+                    // Check checker logic: if checker is 7, reset checker, set counter to 1, and enable the corresponding buzzer
+                    if (state_checker == 3'd7) begin
+                        state_checker <= 3'd0;
+                        case (state_check)
+                            2'd0: begin
+                                buzzer1 <= 1'b0;
+                                buzzer2 <= 1'b0;
+                                buzzer3 <= 1'b0;
+                                counter <= 5'b0;
                             end
+                            2'd1: begin
+                                buzzer1 <= 1'b1;
+                                buzzer2 <= 1'b0;
+                                buzzer3 <= 1'b0;
+                                counter <= 5'b1;
+                            end
+                            2'd2: begin
+                                buzzer1 <= 1'b0;
+                                buzzer2 <= 1'b1;
+                                buzzer3 <= 1'b0;
+                                counter <= 5'b1;
+                            end
+                            2'd3: begin
+                                buzzer1 <= 1'b0;
+                                buzzer2 <= 1'b0;
+                                buzzer3 <= 1'b1;
+                                counter <= 5'b1;
+                            end
+                            default: begin
+                                buzzer1 <= 1'b0;
+                                buzzer2 <= 1'b0;
+                                buzzer3 <= 1'b0;
+                                counter <= 5'b0;
+                            end
+                        endcase
+                    end else begin
+                        // Check which buzzer is enabled and update state_check
+                        if (sensor1) begin
+                            if (state_check == 2'd1)
+                                state_checker <= state_checker + 1;
+                            else begin
+                                state_check <= 2'd1;
+                                state_checker <= 3'd1;
+                            end
+                        end else if (sensor2) begin
+                            if (state_check == 2'd2)
+                                state_checker <= state_checker + 1;
+                            else begin
+                                state_check <= 2'd2;
+                                state_checker <= 3'd1;
+                            end
+                        end else if (sensor3) begin
+                            if (state_check == 2'd3)
+                                state_checker <= state_checker + 1;
+                            else begin
+                                state_check <= 2'd3;
+                                state_checker <= 3'd1;
+                            end
+                        end else begin
+                            state_checker <= 3'd0;
                         end
                     end
-                    if (counter == 5'd31) begin
-                        counter <= 5'b0;
-                        state_check <= 2'd0;
-                        buzzer1 <= 0;
-                        buzzer2 <= 0;
-                        buzzer3 <= 0;
-                    end else if (counter >= 1) begin
-                        counter <= counter + 1;
-                    end
+                end
+                if (counter == 5'd31) begin
+                    counter <= 5'b0;
+                    state_check <= 2'd0;
+                    buzzer1 <= 0;
+                    buzzer2 <= 0;
+                    buzzer3 <= 0;
+                end else if (counter >= 1) begin
+                    counter <= counter + 1;
                 end
             end
         end
