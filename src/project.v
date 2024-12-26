@@ -54,11 +54,11 @@ module tt_um_aditya_patra(
     
                 // Check if any buzzers are enabled
                 if (!rst_n) begin
-                    state_check <= 1'b0;
+                    state_check <= 2'b0;
                     buzzer1 <= 1'b0;
                     buzzer2 <= 1'b0;
                     buzzer3 <= 1'b0;
-                    state_checker <= 1'b0;
+                    state_checker <= 3'b0;
                     counter <= 1'b0;
                 end else if (rst_n) begin
                     // Increment counter if it's not zero and check for overflow
