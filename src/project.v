@@ -13,8 +13,6 @@ module tt_um_aditya_patra(
     reg [4:0] counter;       // 5-bit counter
     reg [2:0] state_checker;       // 3-bit checker
     reg [1:0] state_check;   // 2-bit state_check
-    reg [1:0] curr_state;    // 2-bit current state
-    reg [1:0] next_state;    // 2-bit next state
 
     
     reg buzzer1;
@@ -39,9 +37,6 @@ module tt_um_aditya_patra(
     always @(posedge clk) begin
         if (ena) begin
             if (!rst_n) begin
-                // Reset all registers
-                curr_state <= STATE_0;
-                next_state <= STATE_0;
                 counter <= 5'b0;
                 state_checker <= 3'b0;
                 state_check <= 2'b0;
@@ -49,8 +44,6 @@ module tt_um_aditya_patra(
                 buzzer2 <= 1'b0;
                 buzzer3 <= 1'b0;
             end else begin
-                // Update current state
-                curr_state <= next_state;
                 // Increment counter if it's not zero and check for overflow
     
                 if (counter == 5'b0) begin
