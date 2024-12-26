@@ -109,8 +109,7 @@ module tt_um_aditya_patra(
                             state_checker <= 3'd0;
                         end
                     end
-                end
-                if (counter == 5'd31) begin
+                end else if (counter == 5'd31) begin
                     counter <= 5'b0;
                     state_check <= 2'd0;
                     buzzer1 <= 0;
