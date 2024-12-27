@@ -10,8 +10,8 @@ module tt_um_aditya_patra(
 );
 
     // Define module variables
-    reg [4:0] counter;       // 5-bit counter
-    reg [2:0] state_checker;       // 3-bit checker
+    reg [26:0] counter;       // 5-bit counter
+    reg [6:0] state_checker;       // 3-bit checker
     reg [1:0] state_check;   // 2-bit state_check
 
     
@@ -46,8 +46,8 @@ module tt_um_aditya_patra(
     always @(posedge clk) begin
         if (ena) begin
             if (!rst_n) begin
-                counter <= 5'b0;
-                state_checker <= 3'b0;
+                counter <= 27'b0;
+                state_checker <= 6'b0;
                 state_check <= STATE_0;
                 buzzer1 <= 1'b0;
                 buzzer2 <= 1'b0;
@@ -55,40 +55,40 @@ module tt_um_aditya_patra(
             end else begin
                 // Increment counter if it's not zero and check for overflow
     
-                if (counter == 5'b0) begin
+                if (counter == 27'd0) begin
                     // Check checker logic: if checker is 7, reset checker, set counter to 1, and enable the corresponding buzzer
-                    if (state_checker == 3'd7) begin
-                        state_checker <= 3'd0;
+                    if (state_checker == 7'd100) begin
+                        state_checker <= 7'd0;
                         case (state_check)
                             STATE_0: begin
                                 buzzer1 <= 1'b0;
                                 buzzer2 <= 1'b0;
                                 buzzer3 <= 1'b0;
-                                counter <= 5'b0;
+                                counter <= 27'd0;
                             end
                             STATE_1: begin
                                 buzzer1 <= 1'b1;
                                 buzzer2 <= 1'b0;
                                 buzzer3 <= 1'b0;
-                                counter <= 5'b1;
+                                counter <= 27'd1;
                             end
                             STATE_2: begin
                                 buzzer1 <= 1'b0;
                                 buzzer2 <= 1'b1;
                                 buzzer3 <= 1'b0;
-                                counter <= 5'b1;
+                                counter <= 27'd1;
                             end
                             STATE_3: begin
                                 buzzer1 <= 1'b0;
                                 buzzer2 <= 1'b0;
                                 buzzer3 <= 1'b1;
-                                counter <= 5'b1;
+                                counter <= 27'd1;
                             end
                             default: begin
                                 buzzer1 <= 1'b0;
                                 buzzer2 <= 1'b0;
                                 buzzer3 <= 1'b0;
-                                counter <= 5'b0;
+                                counter <= 27'd0;
                             end
                         endcase
                     end else begin
@@ -98,28 +98,28 @@ module tt_um_aditya_patra(
                                 state_checker <= state_checker + 1;
                             else begin
                                 state_check <= STATE_1;
-                                state_checker <= 3'd1;
+                                state_checker <= 7'd1;
                             end
                         end else if (sensor2) begin
                             if (state_check == STATE_2)
                                 state_checker <= state_checker + 1;
                             else begin
                                 state_check <= STATE_2;
-                                state_checker <= 3'd1;
+                                state_checker <= 7'd1;
                             end
                         end else if (sensor3) begin
                             if (state_check == STATE_3)
                                 state_checker <= state_checker + 1;
                             else begin
                                 state_check <= STATE_3;
-                                state_checker <= 3'd1;
+                                state_checker <= 7'd1;
                             end
                         end else begin
                             state_checker <= STATE_0;
                         end
                     end
-                end else if (counter == 5'd31) begin
-                    counter <= 5'b0;
+                end else if (counter == 27'd100000000) begin
+                    counter <= 27'd0;
                     state_check <= STATE_0;
                     buzzer1 <= 0;
                     buzzer2 <= 0;
