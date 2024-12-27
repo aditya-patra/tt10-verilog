@@ -21,6 +21,11 @@ module tt_um_aditya_patra(
     assign uo_out[0] = buzzer1;
     assign uo_out[1] = buzzer2;
     assign uo_out[2] = buzzer3;
+    assign uo_out[3] = 1'b0;
+    assign uo_out[4] = 1'b0;
+    assign uo_out[5] = 1'b0;
+    assign uo_out[6] = 1'b0;
+    assign uo_out[7] = 1'b0;
     assign uio_oe = 8'b00000000;
     assign uio_out = 8'b00000000;
     wire sensor1;
@@ -29,6 +34,8 @@ module tt_um_aditya_patra(
     assign sensor2 = ui_in[1];
     wire sensor3;
     assign sensor3 = ui_in[2];
+    wire [4:0] sensors;
+    assign sensors = ui_in[7:3];
     // State definitions
     localparam STATE_0 = 2'b00;
     localparam STATE_1 = 2'b01;
