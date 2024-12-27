@@ -21,6 +21,8 @@ module tt_um_aditya_patra(
     assign uo_out[0] = buzzer1;
     assign uo_out[1] = buzzer2;
     assign uo_out[2] = buzzer3;
+    assign uio_oe = 8'b00000000;
+    assign uio_out = 8'b00000000;
     wire sensor1;
     assign sensor1 = ui_in[0];
     wire sensor2;
@@ -39,7 +41,7 @@ module tt_um_aditya_patra(
             if (!rst_n) begin
                 counter <= 5'b0;
                 state_checker <= 3'b0;
-                state_check <= 2'b0;
+                state_check <= STATE_0;
                 buzzer1 <= 1'b0;
                 buzzer2 <= 1'b0;
                 buzzer3 <= 1'b0;
@@ -51,25 +53,25 @@ module tt_um_aditya_patra(
                     if (state_checker == 3'd7) begin
                         state_checker <= 3'd0;
                         case (state_check)
-                            2'd0: begin
+                            STATE_0: begin
                                 buzzer1 <= 1'b0;
                                 buzzer2 <= 1'b0;
                                 buzzer3 <= 1'b0;
                                 counter <= 5'b0;
                             end
-                            2'd1: begin
+                            STATE_1: begin
                                 buzzer1 <= 1'b1;
                                 buzzer2 <= 1'b0;
                                 buzzer3 <= 1'b0;
                                 counter <= 5'b1;
                             end
-                            2'd2: begin
+                            STATE_2: begin
                                 buzzer1 <= 1'b0;
                                 buzzer2 <= 1'b1;
                                 buzzer3 <= 1'b0;
                                 counter <= 5'b1;
                             end
-                            2'd3: begin
+                            STATE_3: begin
                                 buzzer1 <= 1'b0;
                                 buzzer2 <= 1'b0;
                                 buzzer3 <= 1'b1;
@@ -85,33 +87,33 @@ module tt_um_aditya_patra(
                     end else begin
                         // Check which buzzer is enabled and update state_check
                         if (sensor1) begin
-                            if (state_check == 2'd1)
+                            if (state_check == STATE_1)
                                 state_checker <= state_checker + 1;
                             else begin
-                                state_check <= 2'd1;
+                                state_check <= STATE_1;
                                 state_checker <= 3'd1;
                             end
                         end else if (sensor2) begin
-                            if (state_check == 2'd2)
+                            if (state_check == STATE_2)
                                 state_checker <= state_checker + 1;
                             else begin
-                                state_check <= 2'd2;
+                                state_check <= STATE_2;
                                 state_checker <= 3'd1;
                             end
                         end else if (sensor3) begin
-                            if (state_check == 2'd3)
+                            if (state_check == STATE_3)
                                 state_checker <= state_checker + 1;
                             else begin
-                                state_check <= 2'd3;
+                                state_check <= STATE_3;
                                 state_checker <= 3'd1;
                             end
                         end else begin
-                            state_checker <= 3'd0;
+                            state_checker <= STATE_0;
                         end
                     end
                 end else if (counter == 5'd31) begin
                     counter <= 5'b0;
-                    state_check <= 2'd0;
+                    state_check <= STATE_0;
                     buzzer1 <= 0;
                     buzzer2 <= 0;
                     buzzer3 <= 0;
