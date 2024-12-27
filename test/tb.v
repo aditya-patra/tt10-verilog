@@ -56,9 +56,9 @@ module tb ();
 
         // Case 3: Enable ui_in[1] (sensor2) and observe uo_out[1] (buzzer2) behavior
         ui_in[1] = 1;
-        #100;
+        #1000;
         ui_in[1] = 0;
-
+        #100
         // Case 4: Enable ui_in[2] (sensor3) and observe uo_out[2] (buzzer3) behavior
         ui_in[2] = 1;
         #100;
@@ -67,7 +67,7 @@ module tb ();
         // Case 5: Combination of ui_in[2] (sensor3) and ui_in[1] (sensor2)
         ui_in[2] = 1;
         ui_in[1] = 1;
-        #400;
+        #1400;
         ui_in[2] = 0;
         ui_in[1] = 0;
         #100;
