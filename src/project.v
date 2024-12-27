@@ -37,17 +37,17 @@ module tt_um_aditya_patra(
     wire [4:0] sensors;
     assign sensors = ui_in[7:3];
     // State definitions
-    localparam STATE_0 = 2'b00;
-    localparam STATE_1 = 2'b01;
-    localparam STATE_2 = 2'b10;
-    localparam STATE_3 = 2'b11;
+    localparam STATE_0 = 7'b00;
+    localparam STATE_1 = 7'b01;
+    localparam STATE_2 = 7'b10;
+    localparam STATE_3 = 7'b11;
 
     // Sequential logic for state and counter updates
     always @(posedge clk) begin
         if (ena) begin
             if (!rst_n) begin
                 counter <= 27'b0;
-                state_checker <= 6'b0;
+                state_checker <= 7'b0;
                 state_check <= STATE_0;
                 buzzer1 <= 1'b0;
                 buzzer2 <= 1'b0;
