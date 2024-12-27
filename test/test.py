@@ -10,8 +10,8 @@ from cocotb.triggers import ClockCycles
 async def test_project(dut):
     dut._log.info("Start")
 
-    # Set the clock period to 10 us (100 KHz)
-    clock = Clock(dut.clk, 10, units="us")
+    # Set the clock period to 10 ns (100 MHz)
+    clock = Clock(dut.clk, 10, units="ns")
     cocotb.start_soon(clock.start())
 
     # Reset
@@ -20,21 +20,44 @@ async def test_project(dut):
     dut.ui_in.value = 0
     dut.uio_in.value = 0
     dut.rst_n.value = 0
-    await ClockCycles(dut.clk, 10)
+    await ClockCycles(dut.clk, 2)
     dut.rst_n.value = 1
+    await ClockCycles(dut.clk, 2)
 
     dut._log.info("Test project behavior")
 
-    # Set the input values you want to test
-    dut.ui_in.value = 20
-    dut.uio_in.value = 30
+    # Test case 1: Reset state
+    dut.ui_in.value = 0b00000000  # All sensors off
+    await ClockCycles(dut.clk, 10)
 
-    # Wait for one clock cycle to see the output values
-    await ClockCycles(dut.clk, 1)
+    # Test case 2: Enable ui_in[0] (sensor1)
+    dut.ui_in.value = 0b00000001  # Sensor 1 on
+    await ClockCycles(dut.clk, 10)
+    dut.ui_in.value = 0b00000000  # Sensor 1 off
+    await ClockCycles(dut.clk, 10)
 
-    # The following assersion is just an example of how to check the output values.
-    # Change it to match the actual expected output of your module:
-    assert dut.uo_out.value == 50
+    # Test case 3: Enable ui_in[1] (sensor2)
+    dut.ui_in.value = 0b00000010  # Sensor 2 on
+    await ClockCycles(dut.clk, 10)
+    dut.ui_in.value = 0b00000000  # Sensor 2 off
+    await ClockCycles(dut.clk, 10)
 
-    # Keep testing the module by changing the input values, waiting for
-    # one or more clock cycles, and asserting the expected output values.
+    # Test case 4: Enable ui_in[2] (sensor3)
+    dut.ui_in.value = 0b00000100  # Sensor 3 on
+    await ClockCycles(dut.clk, 10)
+    dut.ui_in.value = 0b00000000  # Sensor 3 off
+    await ClockCycles(dut.clk, 10)
+
+    # Test case 5: Combination of ui_in[1] and ui_in[2]
+    dut.ui_in.value = 0b00000110  # Sensor 2 and 3 on
+    await ClockCycles(dut.clk, 40)
+    dut.ui_in.value = 0b00000000  # All sensors off
+    await ClockCycles(dut.clk, 10)
+
+    # Test case 6: All sensors enabled
+    dut.ui_in.value = 0b11111111  # All sensors on
+    await ClockCycles(dut.clk, 20)
+    dut.ui_in.value = 0b00000000  # All sensors off
+    await ClockCycles(dut.clk, 10)
+
+    dut._log.info("End of test")
