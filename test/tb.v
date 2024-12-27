@@ -76,10 +76,6 @@ module tb ();
         ui_in = 8'b11111111;  // All sensors on
         #200;
         ui_in = 8'b00000000;  // All sensors off
-        #100;
-
-        // End simulation
-        #10 $finish;
     end
 
 endmodule
