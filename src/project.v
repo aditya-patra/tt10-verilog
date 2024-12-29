@@ -18,7 +18,7 @@ module tt_um_aditya_patra(
 
     // Define module variables
     reg [27:0] counter;       // 27-bit counter to track duration of current state
-    reg [6:0] input_validity; // 7-bit counter to ensure that input state-enabling signal is valid by checking that the signal lasts for a certain duration before enabling state
+    reg [6:0] input_validate; // 7-bit counter to ensure that input state-enabling signal is valid by checking that the signal lasts for a certain duration before enabling state
     reg [1:0] state;          // current state
 
     
@@ -62,7 +62,7 @@ module tt_um_aditya_patra(
             // reset conditions
             if (!rst_n) begin
                 counter <= 27'b0;
-                sensor_verify <= 7'b0;
+                input_validate <= 7'b0;
                 state <= STATE_0;
                 speaker1 <= 1'b0;
                 speaker2 <= 1'b0;
@@ -70,10 +70,10 @@ module tt_um_aditya_patra(
             end else begin
                 // if counter is 0, check sensor input signals
                 if (counter == 27'd0) begin
-                    // Check sensor_verify
-                    // if sensor_verify is 100, reset sensor_verify, set counter to 1, and enable the corresponding speaker
-                    if (sensor_verify == 7'd100) begin
-                        sensor_verify <= 7'd0;
+                    // Check input_validate
+                    // if input_validate is 100, reset input_validate, set counter to 1, and enable the corresponding speaker
+                    if (input_validate == 7'd100) begin
+                        input_validate <= 7'd0;
                         case (state)
                             STATE_0: begin
                                 speaker1 <= 1'b0;
@@ -107,33 +107,33 @@ module tt_um_aditya_patra(
                             end
                         endcase
                     end else begin
-                        // if sensor_verify is not 100, check which sensor is enabled in order of priority
+                        // if input_validate is not 100, check which sensor is enabled in order of priority
                         
-                        // if sensor is enabled and corresponding state is enabled, increment sensor_verify
-                        // else, change current state to state corresponding to enabling signal and set sensor_verify to 1
+                        // if sensor is enabled and corresponding state is enabled, increment input_validate
+                        // else, change current state to state corresponding to enabling signal and set input_validate to 1
                         if (sensor1) begin
                             if (state == STATE_1)
-                                sensor_verify <= sensor_verify + 1;
+                                input_validate <= input_validate + 1;
                             else begin
                                 state <= STATE_1;
-                                sensor_verify <= 7'd1;
+                                input_validate <= 7'd1;
                             end
                         end else if (sensor2) begin
                             if (state == STATE_2)
-                                sensor_verify <= sensor_verify + 1;
+                                input_validate <= input_validate + 1;
                             else begin
                                 state <= STATE_2;
-                                sensor_verify <= 7'd1;
+                                input_validate <= 7'd1;
                             end
                         end else if (sensor3) begin
                             if (state == STATE_3)
-                                sensor_verify <= sensor_verify + 1;
+                                input_validate <= input_validate + 1;
                             else begin
                                 state <= STATE_3;
-                                sensor_verify <= 7'd1;
+                                input_validate <= 7'd1;
                             end
                         end else begin
-                            sensor_verify <= STATE_0;
+                            input_validate <= STATE_0;
                         end
                     end
                 // if counter reaching 100000000, reset counter, state, and speaker values
