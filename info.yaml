@@ -32,9 +32,9 @@ pinout:
   ui[7]: ""
 
   # Outputs
-  uo[0]: "buzzer1"
-  uo[1]: "buzzer2"
-  uo[2]: "buzzer3"
+  uo[0]: "speaker1"
+  uo[1]: "speaker2"
+  uo[2]: "speaker3"
   uo[3]: ""
   uo[4]: ""
   uo[5]: ""
