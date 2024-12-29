@@ -1,26 +1,37 @@
+// priority-encoded state machine with 4 states
+// 3 input state enable signals from ui_in
+// 3 output state signals in uo_out
+
+// project is meant to warn visually impaired user of obstacles around them by using 3 LIDAR sensors as input and connecting speakers to state output
+// when LIDAR sensor sends enabling signal, state machine enables corresponding speaker warning user of obstacle in the direction of the LIDAR sensor
+
 module tt_um_aditya_patra(
-    input wire [7:0] ui_in,    // Inputs mapped to the pinout
-    output wire [7:0] uo_out, // Outputs mapped to the pinout
-    input wire [7:0] uio_in,
-    output wire [7:0] uio_oe,
-    output wire [7:0] uio_out,
+    input wire [7:0] ui_in,      // Using ui_in [0:2]
+    output wire [7:0] uo_out,    // Using uo_out [0:2]
+    input wire [7:0] uio_in,     // Unused
+    output wire [7:0] uio_oe,    // Unused
+    output wire [7:0] uio_out,   // Unused
     input wire clk,
-    input wire ena,
-    input wire rst_n
+    input wire ena,              // signal to enable design
+    input wire rst_n             // active low reset
 );
 
     // Define module variables
-    reg [26:0] counter;       // 5-bit counter
-    reg [6:0] state_checker;       // 3-bit checker
-    reg [1:0] state_check;   // 2-bit state_check
+    reg [27:0] counter;       // 27-bit counter to track duration of current state
+    reg [6:0] input_validity; // 7-bit counter to ensure that input state-enabling signal is valid by checking that the signal lasts for a certain duration before enabling state
+    reg [1:0] state;          // current state
 
     
-    reg buzzer1;
-    reg buzzer2;
-    reg buzzer3;
-    assign uo_out[0] = buzzer1;
-    assign uo_out[1] = buzzer2;
-    assign uo_out[2] = buzzer3;
+    reg speaker1;  // output signal of state 1
+    reg speaker2;  // output signal of state 2
+    reg speaker3;  // output signal of state 3
+    
+    // connecting state output signals to uo_out
+    assign uo_out[0] = speaker1;
+    assign uo_out[1] = speaker2;
+    assign uo_out[2] = speaker3;
+
+    // assigning default value to unused output signals
     assign uo_out[3] = 1'b0;
     assign uo_out[4] = 1'b0;
     assign uo_out[5] = 1'b0;
@@ -28,12 +39,15 @@ module tt_um_aditya_patra(
     assign uo_out[7] = 1'b0;
     assign uio_oe = 8'b00000000;
     assign uio_out = 8'b00000000;
-    wire sensor1;
+
+    wire sensor1;  // input signal for state 1 connected to ui_in[0]
     assign sensor1 = ui_in[0];
-    wire sensor2;
+    wire sensor2;  // input signal for state 2 connected to ui_in[1]
     assign sensor2 = ui_in[1];
-    wire sensor3;
+    wire sensor3;  // input signal for state 3 connected to ui_in[2]
     assign sensor3 = ui_in[2];
+
+    // assigning unused input signals to floating variable
     wire [4:0] sensors;
     assign sensors = ui_in[7:3];
     // State definitions
@@ -45,85 +59,91 @@ module tt_um_aditya_patra(
     // Sequential logic for state and counter updates
     always @(posedge clk) begin
         if (ena) begin
+            // reset conditions
             if (!rst_n) begin
                 counter <= 27'b0;
-                state_checker <= 7'b0;
-                state_check <= STATE_0;
-                buzzer1 <= 1'b0;
-                buzzer2 <= 1'b0;
-                buzzer3 <= 1'b0;
+                sensor_verify <= 7'b0;
+                state <= STATE_0;
+                speaker1 <= 1'b0;
+                speaker2 <= 1'b0;
+                speaker3 <= 1'b0;
             end else begin
-                // Increment counter if it's not zero and check for overflow
-    
+                // if counter is 0, check sensor input signals
                 if (counter == 27'd0) begin
-                    // Check checker logic: if checker is 7, reset checker, set counter to 1, and enable the corresponding buzzer
-                    if (state_checker == 7'd100) begin
-                        state_checker <= 7'd0;
-                        case (state_check)
+                    // Check sensor_verify
+                    // if sensor_verify is 100, reset sensor_verify, set counter to 1, and enable the corresponding speaker
+                    if (sensor_verify == 7'd100) begin
+                        sensor_verify <= 7'd0;
+                        case (state)
                             STATE_0: begin
-                                buzzer1 <= 1'b0;
-                                buzzer2 <= 1'b0;
-                                buzzer3 <= 1'b0;
+                                speaker1 <= 1'b0;
+                                speaker2 <= 1'b0;
+                                speaker3 <= 1'b0;
                                 counter <= 27'd0;
                             end
                             STATE_1: begin
-                                buzzer1 <= 1'b1;
-                                buzzer2 <= 1'b0;
-                                buzzer3 <= 1'b0;
+                                speaker1 <= 1'b1;
+                                speaker2 <= 1'b0;
+                                speaker3 <= 1'b0;
                                 counter <= 27'd1;
                             end
                             STATE_2: begin
-                                buzzer1 <= 1'b0;
-                                buzzer2 <= 1'b1;
-                                buzzer3 <= 1'b0;
+                                speaker1 <= 1'b0;
+                                speaker2 <= 1'b1;
+                                speaker3 <= 1'b0;
                                 counter <= 27'd1;
                             end
                             STATE_3: begin
-                                buzzer1 <= 1'b0;
-                                buzzer2 <= 1'b0;
-                                buzzer3 <= 1'b1;
+                                speaker1 <= 1'b0;
+                                speaker2 <= 1'b0;
+                                speaker3 <= 1'b1;
                                 counter <= 27'd1;
                             end
                             default: begin
-                                buzzer1 <= 1'b0;
-                                buzzer2 <= 1'b0;
-                                buzzer3 <= 1'b0;
+                                speaker1 <= 1'b0;
+                                speaker2 <= 1'b0;
+                                speaker3 <= 1'b0;
                                 counter <= 27'd0;
                             end
                         endcase
                     end else begin
-                        // Check which buzzer is enabled and update state_check
+                        // if sensor_verify is not 100, check which sensor is enabled in order of priority
+                        
+                        // if sensor is enabled and corresponding state is enabled, increment sensor_verify
+                        // else, change current state to state corresponding to enabling signal and set sensor_verify to 1
                         if (sensor1) begin
-                            if (state_check == STATE_1)
-                                state_checker <= state_checker + 1;
+                            if (state == STATE_1)
+                                sensor_verify <= sensor_verify + 1;
                             else begin
-                                state_check <= STATE_1;
-                                state_checker <= 7'd1;
+                                state <= STATE_1;
+                                sensor_verify <= 7'd1;
                             end
                         end else if (sensor2) begin
-                            if (state_check == STATE_2)
-                                state_checker <= state_checker + 1;
+                            if (state == STATE_2)
+                                sensor_verify <= sensor_verify + 1;
                             else begin
-                                state_check <= STATE_2;
-                                state_checker <= 7'd1;
+                                state <= STATE_2;
+                                sensor_verify <= 7'd1;
                             end
                         end else if (sensor3) begin
-                            if (state_check == STATE_3)
-                                state_checker <= state_checker + 1;
+                            if (state == STATE_3)
+                                sensor_verify <= sensor_verify + 1;
                             else begin
-                                state_check <= STATE_3;
-                                state_checker <= 7'd1;
+                                state <= STATE_3;
+                                sensor_verify <= 7'd1;
                             end
                         end else begin
-                            state_checker <= STATE_0;
+                            sensor_verify <= STATE_0;
                         end
                     end
+                // if counter reaching 100000000, reset counter, state, and speaker values
                 end else if (counter == 27'd100000000) begin
                     counter <= 27'd0;
-                    state_check <= STATE_0;
-                    buzzer1 <= 0;
-                    buzzer2 <= 0;
-                    buzzer3 <= 0;
+                    state <= STATE_0;
+                    speaker1 <= 0;
+                    speaker2 <= 0;
+                    speaker3 <= 0;
+                // if counter >= 1, increment counter
                 end else if (counter >= 1) begin
                     counter <= counter + 1;
                 end
