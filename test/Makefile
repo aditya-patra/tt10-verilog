@@ -35,10 +35,10 @@ COMPILE_ARGS 		+= -I$(SRC_DIR)
 
 # Include the testbench sources:
 VERILOG_SOURCES += $(PWD)/tb.v
-TOPLEVEL = tb
+TOPLEVEL = tt_um_aditya_patra
 
 # MODULE is the basename of the Python test file
-MODULE = test
+MODULE = test_tt_um_aditya_patra
 
 # include cocotb's make rules to take care of the simulator setup
 include $(shell cocotb-config --makefiles)/Makefile.sim
