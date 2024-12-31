@@ -17,9 +17,7 @@ module tt_um_aditya_patra(
 );
 
     // Define module variables
-    reg [26:0] counter;       // 27-bit counter to track duration of current state
-    reg [6:0] input_validate; // 7-bit counter to ensure that input logic 1 signal is valid by checking that the signal lasts for a certain duration before enabling state
-    reg [1:0] state;          // current state
+    reg [1:0] curr_state;          // current state
 
     
     reg speaker1;  // output signal of state 1
@@ -68,84 +66,41 @@ module tt_um_aditya_patra(
                 speaker2 <= 1'b0;
                 speaker3 <= 1'b0;
             end else begin
-                // if counter is 0, check sensor input signals
-                if (counter == 27'd0) begin
-                    // Check input_validate
-                    // if input_validate is 100, reset input_validate, set counter to 1, and enable the corresponding speaker
-                    if (input_validate == 7'd100) begin
-                        input_validate <= 7'd0;
-                        case (state)
-                            STATE_0: begin
-                                speaker1 <= 1'b0;
-                                speaker2 <= 1'b0;
-                                speaker3 <= 1'b0;
-                                counter <= 27'd0;
-                            end
-                            STATE_1: begin
-                                speaker1 <= 1'b1;
-                                speaker2 <= 1'b0;
-                                speaker3 <= 1'b0;
-                                counter <= 27'd1;
-                            end
-                            STATE_2: begin
-                                speaker1 <= 1'b0;
-                                speaker2 <= 1'b1;
-                                speaker3 <= 1'b0;
-                                counter <= 27'd1;
-                            end
-                            STATE_3: begin
-                                speaker1 <= 1'b0;
-                                speaker2 <= 1'b0;
-                                speaker3 <= 1'b1;
-                                counter <= 27'd1;
-                            end
-                            default: begin
-                                speaker1 <= 1'b0;
-                                speaker2 <= 1'b0;
-                                speaker3 <= 1'b0;
-                                counter <= 27'd0;
-                            end
-                        endcase
-                    end else begin
-                        // if input_validate is not 100, check which sensor is logic 1 in order of priority
-                        
-                        // if a sensor is logic 1 and corresponding state is enabled, increment input_validate
-                        // else, change current state to state corresponding to sensor with logic 1 and set input_validate to 1
-                        if (sensor1) begin
-                            if (state == STATE_1)
-                                input_validate <= input_validate + 1;
-                            else begin
-                                state <= STATE_1;
-                                input_validate <= 7'd1;
-                            end
-                        end else if (sensor2) begin
-                            if (state == STATE_2)
-                                input_validate <= input_validate + 1;
-                            else begin
-                                state <= STATE_2;
-                                input_validate <= 7'd1;
-                            end
-                        end else if (sensor3) begin
-                            if (state == STATE_3)
-                                input_validate <= input_validate + 1;
-                            else begin
-                                state <= STATE_3;
-                                input_validate <= 7'd1;
-                            end
-                        end else begin
-                            input_validate <= STATE_0;
-                        end
+                case (curr_state)
+                    STATE_0:begin
+                        speaker1 <= 0;
+                        speaker2 <= 0;
+                        speaker3 <= 0;
                     end
-                // if counter reaching 100000000, reset counter, state, and speaker values
-                end else if (counter == 27'd100000000) begin
-                    counter <= 27'd0;
-                    state <= STATE_0;
-                    speaker1 <= 0;
-                    speaker2 <= 0;
-                    speaker3 <= 0;
-                // if counter >= 1, increment counter
-                end else if (counter >= 1) begin
-                    counter <= counter + 1;
+                    STATE_1:begin
+                        speaker1 <= 1;
+                        speaker2 <= 0;
+                        speaker3 <= 0;
+                    end
+                    STATE_2:begin
+                        speaker1 <= 0;
+                        speaker2 <= 1;
+                        speaker3 <= 0;
+                    end
+                    STATE_3:begin
+                        speaker1 <= 0;
+                        speaker2 <= 0;
+                        speaker3 <= 1;
+                    end
+                    default:begin
+                        speaker1 <= 0;
+                        speaker2 <= 0;
+                        speaker3 <= 0;
+                    end
+                endcase
+                if (sensor1 == 1) begin
+                    curr_state <= STATE_1;
+                end else if (sensor2 == 1) begin
+                    curr_state <= STATE_2;
+                end else if (sensor3 == 1) begin
+                    curr_state <= STATE_3;
+                end else begin
+                    curr_state <= STATE_0;
                 end
             end
         end
