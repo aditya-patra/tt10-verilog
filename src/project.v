@@ -3,7 +3,7 @@
 // 3 output state signals to uo_out[0:2]
 
 // project is meant to warn visually impaired user of obstacles around them by using 3 LIDAR distance sensors as input and connecting speakers to state output
-// when LIDAR sensor sends enabling signal, state machine enables corresponding speaker warning user of obstacle in the direction of the LIDAR sensor
+// when LIDAR sensor sends logic 1(object is close), state machine enables corresponding speaker warning user of obstacle in the direction of the LIDAR sensor
 
 module tt_um_aditya_patra(
     input wire [7:0] ui_in,      // Using ui_in [0:2]
@@ -18,7 +18,7 @@ module tt_um_aditya_patra(
 
     // Define module variables
     reg [26:0] counter;       // 27-bit counter to track duration of current state
-    reg [6:0] input_validate; // 7-bit counter to ensure that input state-enabling signal is valid by checking that the signal lasts for a certain duration before enabling state
+    reg [6:0] input_validate; // 7-bit counter to ensure that input logic 1 signal is valid by checking that the signal lasts for a certain duration before enabling state
     reg [1:0] state;          // current state
 
     
@@ -107,10 +107,10 @@ module tt_um_aditya_patra(
                             end
                         endcase
                     end else begin
-                        // if input_validate is not 100, check which sensor is enabled in order of priority
+                        // if input_validate is not 100, check which sensor is logic 1 in order of priority
                         
-                        // if sensor is enabled and corresponding state is enabled, increment input_validate
-                        // else, change current state to state corresponding to enabling signal and set input_validate to 1
+                        // if a sensor is logic 1 and corresponding state is enabled, increment input_validate
+                        // else, change current state to state corresponding to sensor with logic 1 and set input_validate to 1
                         if (sensor1) begin
                             if (state == STATE_1)
                                 input_validate <= input_validate + 1;
