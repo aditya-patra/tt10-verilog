@@ -25,16 +25,9 @@ module tt_um_aditya_patra(
     reg speaker3;  // output signal of state 3
     
     // connecting state output signals to uo_out
-    assign uo_out[0] = speaker1;
-    assign uo_out[1] = speaker2;
-    assign uo_out[2] = speaker3;
+    assign uo_out = {5'b00000, speaker3, speaker2, speaker1};
 
     // assigning default value to unused output signals
-    assign uo_out[3] = 1'b0;
-    assign uo_out[4] = 1'b0;
-    assign uo_out[5] = 1'b0;
-    assign uo_out[6] = 1'b0;
-    assign uo_out[7] = 1'b0;
     assign uio_oe = 8'b00000000;
     assign uio_out = 8'b00000000;
 
