@@ -1,8 +1,8 @@
 // priority-encoded state machine with 4 states
-// 3 input state enable signals from ui_in
-// 3 output state signals in uo_out
+// 3 input state enable signals from ui_in[0:2]
+// 3 output state signals to uo_out[0:2]
 
-// project is meant to warn visually impaired user of obstacles around them by using 3 LIDAR sensors as input and connecting speakers to state output
+// project is meant to warn visually impaired user of obstacles around them by using 3 LIDAR distance sensors as input and connecting speakers to state output
 // when LIDAR sensor sends enabling signal, state machine enables corresponding speaker warning user of obstacle in the direction of the LIDAR sensor
 
 module tt_um_aditya_patra(
@@ -17,7 +17,7 @@ module tt_um_aditya_patra(
 );
 
     // Define module variables
-    reg [27:0] counter;       // 27-bit counter to track duration of current state
+    reg [26:0] counter;       // 27-bit counter to track duration of current state
     reg [6:0] input_validate; // 7-bit counter to ensure that input state-enabling signal is valid by checking that the signal lasts for a certain duration before enabling state
     reg [1:0] state;          // current state
 
@@ -59,7 +59,7 @@ module tt_um_aditya_patra(
     // Sequential logic for state and counter updates
     always @(posedge clk) begin
         if (ena) begin
-            // reset conditions
+            // reset all variables to 0
             if (!rst_n) begin
                 counter <= 27'b0;
                 input_validate <= 7'b0;
