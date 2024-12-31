@@ -59,9 +59,7 @@ module tt_um_aditya_patra(
         if (ena) begin
             // reset all variables to 0
             if (!rst_n) begin
-                counter <= 27'b0;
-                input_validate <= 7'b0;
-                state <= STATE_0;
+                curr_state <= STATE_0;
                 speaker1 <= 1'b0;
                 speaker2 <= 1'b0;
                 speaker3 <= 1'b0;
