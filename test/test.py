@@ -34,12 +34,14 @@ async def test_project(dut):
     await ClockCycles(dut.clk, 10)
     dut.ui_in.value = 0b00000000  # Sensor 1 off
     await ClockCycles(dut.clk, 10)
+    cocotb.log.info(f"uo_out value: {dut.uo_out.value}")
     assert dut.uo_out == 0b00000001
     # Test case 3: Enable ui_in[1] (sensor2)
     dut.ui_in.value = 0b00000010  # Sensor 2 on
     await ClockCycles(dut.clk, 10)
     dut.ui_in.value = 0b00000000  # Sensor 2 off
     await ClockCycles(dut.clk, 10)
+    cocotb.log.info(f"uo_out value: {dut.uo_out.value}")
     assert dut.uo_out == 0b00000010
 
     # Test case 4: Enable ui_in[2] (sensor3)
@@ -47,6 +49,7 @@ async def test_project(dut):
     await ClockCycles(dut.clk, 10)
     dut.ui_in.value = 0b00000000  # Sensor 3 off
     await ClockCycles(dut.clk, 10)
+    cocotb.log.info(f"uo_out value: {dut.uo_out.value}")
     assert dut.uo_out == 0b00000100
 
     # Test case 5: Combination of ui_in[1] and ui_in[2]
@@ -54,6 +57,7 @@ async def test_project(dut):
     await ClockCycles(dut.clk, 10)
     dut.ui_in.value = 0b00000000  # All sensors off
     await ClockCycles(dut.clk, 10)
+    cocotb.log.info(f"uo_out value: {dut.uo_out.value}")
     assert dut.uo_out == 0b00000010
 
     # Test case 6: All sensors enabled
@@ -61,6 +65,7 @@ async def test_project(dut):
     await ClockCycles(dut.clk, 10)
     dut.ui_in.value = 0b00000000  # All sensors off
     await ClockCycles(dut.clk, 10)
+    cocotb.log.info(f"uo_out value: {dut.uo_out.value}")
     assert dut.uo_out == 0b00000001
 
     dut._log.info("End of test")
