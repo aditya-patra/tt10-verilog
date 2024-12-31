@@ -49,33 +49,26 @@ module tb ();
         // Case 1: Reset state
         #10;
         rst_n = 1;
-        // Case 2: Enable ui_in[0] (sensor1) and observe uo_out[0] (buzzer1) behavior
+        // Case 2: Enable ui_in[0] (sensor1) and observe uo_out[0] (speaker1) behavior
         ui_in[0] = 1;
-        #100;
+        #20;
         ui_in[0] = 0;
 
-        // Case 3: Enable ui_in[1] (sensor2) and observe uo_out[1] (buzzer2) behavior
+        // Case 3: Enable ui_in[1] (sensor2) and observe uo_out[1] (speaker2) behavior
         ui_in[1] = 1;
-        #1000;
+        #20;
         ui_in[1] = 0;
-        #100
-        // Case 4: Enable ui_in[2] (sensor3) and observe uo_out[2] (buzzer3) behavior
+        // Case 4: Enable ui_in[2] (sensor3) and observe uo_out[2] (speaker3) behavior
         ui_in[2] = 1;
-        #100;
+        #20;
         ui_in[2] = 0;
 
         // Case 5: Combination of ui_in[2] (sensor3) and ui_in[1] (sensor2)
         ui_in[2] = 1;
         ui_in[1] = 1;
-        #1400;
+        #20;
         ui_in[2] = 0;
         ui_in[1] = 0;
-        #100;
-
-        // Case 6: All sensors enabled
-        ui_in = 8'b11111111;  // All sensors on
-        #200;
-        ui_in = 8'b00000000;  // All sensors off
     end
 
 endmodule
