@@ -35,6 +35,10 @@ async def test_tt_um_aditya_patra(dut):
     dut.ui_in.value = 0b00000000  # Sensor 1 off
     await ClockCycles(dut.clk, 10)
     cocotb.log.info(f"uo_out value: {dut.uo_out.value}")
+    cocotb.log.info(f"ui_in value: {dut.ui_in.value}")
+    cocotb.log.info(f"uio_in value: {dut.uio_in.value}")
+    cocotb.log.info(f"uio_oe value: {dut.uio_oe.value}")
+    cocotb.log.info(f"uio_out value: {dut.uio_out.value}")
     assert dut.uo_out.value == 0b00000001
     # Test case 3: Enable ui_in[1] (sensor2)
     dut.ui_in.value = 0b00000010  # Sensor 2 on
