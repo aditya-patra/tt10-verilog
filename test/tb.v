@@ -15,7 +15,7 @@ module tb ();
     wire [7:0] uo_out;  // 8 bits for 8 buzzers
 
     // Instantiate the state_machine module (use ui_in and uo_out)
-    tt_um_aditya_patra dut (
+    tt_um_aditya_patra(
         .ui_in(ui_in),    // 8-bit input
         .clk(clk),
         .ena(ena),
