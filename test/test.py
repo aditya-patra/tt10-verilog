@@ -7,7 +7,7 @@ from cocotb.triggers import ClockCycles
 
 
 @cocotb.test()
-async def tt_um_aditya_patra(dut):
+async def test_tt_um_aditya_patra(dut):
     dut._log.info("Start")
 
     # Set the clock period to 10 ns (100 MHz)
