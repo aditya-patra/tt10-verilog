@@ -12,7 +12,7 @@ module tt_um_aditya_patra(
     output wire [7:0] uio_oe,    // Unused
     output wire [7:0] uio_out,   // Unused
     input wire clk,
-    input wire ena,              // signal to enable design
+    input wire ena,              // signal to enable design(mandatory for tiny tapeout designs)
     input wire rst_n             // active low reset
 );
 
@@ -25,9 +25,16 @@ module tt_um_aditya_patra(
     reg speaker3;  // output signal of state 3
     
     // connecting state output signals to uo_out
-    assign uo_out = {5'b00000, speaker3, speaker2, speaker1};
+    assign uo_out[0] = speaker1;
+    assign uo_out[1] = speaker2;
+    assign uo_out[2] = speaker3;
 
     // assigning default value to unused output signals
+    assign uo_out[3] = 1'b0;
+    assign uo_out[4] = 1'b0;
+    assign uo_out[5] = 1'b0;
+    assign uo_out[6] = 1'b0;
+    assign uo_out[7] = 1'b0;
     assign uio_oe = 8'b00000000;
     assign uio_out = 8'b00000000;
 
@@ -57,39 +64,50 @@ module tt_um_aditya_patra(
                 speaker2 <= 1'b0;
                 speaker3 <= 1'b0;
             end else begin
+                //check current state and update output speakers accordingly
                 case (curr_state)
+                    //no speakers are logic 1
                     STATE_0:begin
                         speaker1 <= 0;
                         speaker2 <= 0;
                         speaker3 <= 0;
                     end
+                    //speaker1 is logic 1
                     STATE_1:begin
                         speaker1 <= 1;
                         speaker2 <= 0;
                         speaker3 <= 0;
                     end
+                    //speaker2 is logic 1
                     STATE_2:begin
                         speaker1 <= 0;
                         speaker2 <= 1;
                         speaker3 <= 0;
                     end
+                    //speaker3 is logic 1
                     STATE_3:begin
                         speaker1 <= 0;
                         speaker2 <= 0;
                         speaker3 <= 1;
                     end
+                    //all speakers logic 0 if curr_state has unknown value
                     default:begin
                         speaker1 <= 0;
                         speaker2 <= 0;
                         speaker3 <= 0;
                     end
                 endcase
+                //check which speaker is logic 1 and update curr_state accordingly
+                //if sensor1 is logic 1, change curr_state to 1
                 if (sensor1 == 1) begin
                     curr_state <= STATE_1;
+                //if sensor2 is logic 1, change curr_state to 2
                 end else if (sensor2 == 1) begin
                     curr_state <= STATE_2;
+                //if sensor3 is logic 1, change curr_state to 3
                 end else if (sensor3 == 1) begin
                     curr_state <= STATE_3;
+                //if no sensors are logic 1, change curr_state to 0
                 end else begin
                     curr_state <= STATE_0;
                 end
