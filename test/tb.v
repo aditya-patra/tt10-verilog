@@ -1,3 +1,4 @@
+`default_nettype none
 `timescale 1ns / 1ps
 
 module tb ();
@@ -14,8 +15,16 @@ module tb ();
     // Testbench outputs (uo_out is an 8-bit wire)
     wire [7:0] uo_out;  // 8 bits for 8 buzzers
 
+    `ifdef GL_TEST
+      wire VPWR = 1'b1;
+      wire VGND = 1'b0;
+    `endif
     // Instantiate the state_machine module (use ui_in and uo_out)
     tt_um_aditya_patra dut(
+        `ifdef GL_TEST
+          .VPWR(VPWR),
+          .VGND(VGND),
+        `endif
         .ui_in(ui_in),    // 8-bit input
         .clk(clk),
         .ena(ena),
