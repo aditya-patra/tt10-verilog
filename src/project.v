@@ -6,8 +6,8 @@
 // when LIDAR sensor sends logic 1(object is close), state machine enables corresponding speaker warning user of obstacle in the direction of the LIDAR sensor
 
 module tt_um_aditya_patra(
-    input wire [7:0] ui_in,      // Using ui_in [0:2]
-    output wire [7:0] uo_out,    // Using uo_out [0:2]
+    input wire [7:0] ui_in,      // Using ui_in [2:0]
+    output wire [7:0] uo_out,    // Using uo_out [2:0]
     input wire [7:0] uio_in,     // Unused
     output wire [7:0] uio_oe,    // Unused
     output wire [7:0] uio_out,   // Unused
