@@ -113,7 +113,6 @@ module tt_um_aditya_patra(
             // reset all variables to 0
             if (!rst_n) begin
                 curr_state <= STATE_0;
-                next_state <= STATE_0;
             end else begin
                 // assign curr_state to next_state
                 curr_state <= next_state;
