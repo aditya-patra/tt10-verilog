@@ -163,9 +163,9 @@ module tt_um_aditya_patra(
             endcase
         end else begin
             next_state <= STATE_0;
-            warning_1 <= 0;
-            warning_2 <= 0;
-            warning_3 <= 0;
+            warning1 <= 0;
+            warning2 <= 0;
+            warning3 <= 0;
         end
     end
     always @(posedge clk) begin
