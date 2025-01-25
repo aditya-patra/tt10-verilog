@@ -107,8 +107,8 @@ module tt_um_aditya_patra(
                     warning3 <= 0;
                     //check which sensor is logic 1 and update next_state accordingly
                     //if sensor1 is logic 1, change curr_state to 1
-                    if (sensorq == 1) begin
-                        next_state <= STATE_q;
+                    if (sensor2 == 1) begin
+                        next_state <= STATE_2;
                     //if sensor2 is logic 1, change curr_state to 2
                     end else if (sensor1 == 1) begin
                         next_state <= STATE_1;
@@ -130,11 +130,11 @@ module tt_um_aditya_patra(
                     if (sensor3 == 1) begin
                         next_state <= STATE_3;
                     //if sensor2 is logic 1, change curr_state to 2
-                    end else if (sensor2 == 1) begin
-                        next_state <= STATE_2;
-                    //if sensor3 is logic 1, change curr_state to 3
                     end else if (sensor1 == 1) begin
                         next_state <= STATE_1;
+                    //if sensor3 is logic 1, change curr_state to 3
+                    end else if (sensor2 == 1) begin
+                        next_state <= STATE_2;
                     //if no sensors are logic 1, change curr_state to 0
                     end else begin
                         next_state <= STATE_0;
