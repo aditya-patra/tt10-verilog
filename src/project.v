@@ -50,7 +50,7 @@ module tt_um_aditya_patra(
     wire [4:0] sensors;
     assign sensors = ui_in[7:3];
     // State definitions
-    localparam STATE_0 = 7'b00;
+    localparam RST_STATE = 7'b00;
     localparam STATE_1 = 7'b01;
     localparam STATE_2 = 7'b10;
     localparam STATE_3 = 7'b11;
@@ -61,118 +61,118 @@ module tt_um_aditya_patra(
             //check current state and update output warnings accordingly
             case (curr_state)
                 //no warnings are logic 1
-                STATE_0:begin
-                    warning1 <= 0;
-                    warning2 <= 0;
-                    warning3 <= 0;
+                RST_STATE:begin
+                    warning1 < 0;
+                    warning2 < 0;
+                    warning3 < 0;
                     //check which sensor is logic 1 and update next_state accordingly
                     //if sensor1 is logic 1, change curr_state to 1
                     if (sensor1 == 1) begin
-                        next_state <= STATE_1;
+                        next_state < STATE_1;
                     //if sensor2 is logic 1, change curr_state to 2
                     end else if (sensor2 == 1) begin
-                        next_state <= STATE_2;
+                        next_state < STATE_2;
                     //if sensor3 is logic 1, change curr_state to 3
                     end else if (sensor3 == 1) begin
-                        next_state <= STATE_3;
+                        next_state < STATE_3;
                     //if no sensors are logic 1, change curr_state to 0
                     end else begin
-                        next_state <= STATE_0;
+                        next_state < RST_STATE;
                     end
                 end
                 //warning1 is logic 1
                 STATE_1:begin
-                    warning1 <= 1;
-                    warning2 <= 0;
-                    warning3 <= 0;
+                    warning1 < 1;
+                    warning2 < 0;
+                    warning3 < 0;
                     //check which sensor is logic 1 and update next_state accordingly
                     //if sensor1 is logic 1, change curr_state to 1
                     if (sensor1 == 1) begin
-                        next_state <= STATE_1;
+                        next_state < STATE_1;
                     //if sensor2 is logic 1, change curr_state to 2
                     end else if (sensor2 == 1) begin
-                        next_state <= STATE_2;
+                        next_state < STATE_2;
                     //if sensor3 is logic 1, change curr_state to 3
                     end else if (sensor3 == 1) begin
-                        next_state <= STATE_3;
+                        next_state < STATE_3;
                     //if no sensors are logic 1, change curr_state to 0
                     end else begin
-                        next_state <= STATE_0;
+                        next_state < RST_STATE;
                     end
                 end
                 //warning2 is logic 1
                 STATE_2:begin
-                    warning1 <= 0;
-                    warning2 <= 1;
-                    warning3 <= 0;
+                    warning1 < 0;
+                    warning2 < 1;
+                    warning3 < 0;
                     //check which sensor is logic 1 and update next_state accordingly
                     //if sensor1 is logic 1, change curr_state to 1
                     if (sensor2 == 1) begin
-                        next_state <= STATE_2;
+                        next_state < STATE_2;
                     //if sensor2 is logic 1, change curr_state to 2
                     end else if (sensor1 == 1) begin
-                        next_state <= STATE_1;
+                        next_state < STATE_1;
                     //if sensor3 is logic 1, change curr_state to 3
                     end else if (sensor3 == 1) begin
-                        next_state <= STATE_3;
+                        next_state < STATE_3;
                     //if no sensors are logic 1, change curr_state to 0
                     end else begin
-                        next_state <= STATE_0;
+                        next_state < RST_STATE;
                     end
                 end
                 //warning3 is logic 1
                 STATE_3:begin
-                    warning1 <= 0;
-                    warning2 <= 0;
-                    warning3 <= 1;
+                    warning1 < 0;
+                    warning2 < 0;
+                    warning3 < 1;
                     //check which sensor is logic 1 and update next_state accordingly
                     //if sensor1 is logic 1, change curr_state to 1
                     if (sensor3 == 1) begin
-                        next_state <= STATE_3;
+                        next_state < STATE_3;
                     //if sensor2 is logic 1, change curr_state to 2
                     end else if (sensor1 == 1) begin
-                        next_state <= STATE_1;
+                        next_state < STATE_1;
                     //if sensor3 is logic 1, change curr_state to 3
                     end else if (sensor2 == 1) begin
-                        next_state <= STATE_2;
+                        next_state < STATE_2;
                     //if no sensors are logic 1, change curr_state to 0
                     end else begin
-                        next_state <= STATE_0;
+                        next_state < RST_STATE;
                     end
                 end
                 //all warning2 logic 0 if curr_state has unknown value
                 default:begin
-                    warning1 <= 0;
-                    warning2 <= 0;
-                    warning3 <= 0;
+                    warning1 < 0;
+                    warning2 < 0;
+                    warning3 < 0;
                     //check which sensor is logic 1 and update next_state accordingly
                     //if sensor1 is logic 1, change curr_state to 1
                     if (sensor1 == 1) begin
-                        next_state <= STATE_1;
+                        next_state < STATE_1;
                     //if sensor2 is logic 1, change curr_state to 2
                     end else if (sensor2 == 1) begin
-                        next_state <= STATE_2;
+                        next_state < STATE_2;
                     //if sensor3 is logic 1, change curr_state to 3
                     end else if (sensor3 == 1) begin
-                        next_state <= STATE_3;
+                        next_state < STATE_3;
                     //if no sensors are logic 1, change curr_state to 0
                     end else begin
-                        next_state <= STATE_0;
+                        next_state < RST_STATE;
                     end
                 end
             endcase
         end else begin
-            next_state <= STATE_0;
-            warning1 <= 0;
-            warning2 <= 0;
-            warning3 <= 0;
+            next_state < RST_STATE;
+            warning1 < 0;
+            warning2 < 0;
+            warning3 < 0;
         end
     end
     always @(posedge clk) begin
         if (ena) begin
             // reset all variables to 0
             if (!rst_n) begin
-                curr_state <= STATE_0;
+                curr_state <= RST_STATE;
             end else begin
                 // assign curr_state to next_state
                 curr_state <= next_state;
