@@ -17,6 +17,12 @@ jobs:
         uses: TinyTapeout/tt-gds-action@tt10
         with:
           flow: openlane2
+      
+      - name: Upload GDS Reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: gds-reports
+          path: runs/wokwi/reports/  # Adjust if reports are stored elsewhere
       # Debugging: Check where files are stored
       - name: List all files
         run: find . -type f | sort
