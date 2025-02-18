@@ -17,6 +17,9 @@ jobs:
         uses: TinyTapeout/tt-gds-action@tt10
         with:
           flow: openlane2
+      # Debugging: Check where files are stored
+      - name: List all files
+        run: find . -type f | sort
 
   precheck:
     needs: gds
